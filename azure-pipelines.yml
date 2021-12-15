@@ -1,0 +1,32 @@
+# Node.js with React
+- task: S3Upload@1
+  inputs:
+    regionName: 'us-east-1'
+    bucketName: 'awscap-connect-ui'
+    globExpressions: '**'
+# Build a Node.js project that uses React.
+- task: AWSCLI@1
+  inputs:
+    regionName: 'us-east-1'
+    awsCommand: 'cloudfront'
+    awsSubCommand: 'create-invalidation'
+    awsArguments: '--distribution-id E2NJ6HZ7C3CEUE --paths /*'
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- awscap/kathyape
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
